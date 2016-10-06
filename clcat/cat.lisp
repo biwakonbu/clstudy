@@ -18,4 +18,5 @@
 (defun read-argv-file (argv)
   (recursive-read (cdr argv)))
 
+;; run cat
 (read-argv-file *posix-argv*)
