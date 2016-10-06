@@ -7,16 +7,25 @@
             while line do (format t "~a~%" line))
       (close in))))
 
-(defun recursive-read (argv)
-  (if (car argv)
+(defun recursive-read (files)
+  (if (car files)
       (progn
-        (handler-case (read-file (car argv))
+        (handler-case (read-file (car files))
           (file-error (c) (format t "~a~%" c)))
-        (recursive-read (cdr argv)))
+        (recursive-read (cdr files)))
       nil))
 
+(defun option-parser (argv &key n)
+  (let ((s (car argv)))
+    (if (or
+         (equal "-n" s)
+         (equal "-number" s))
+        (option-parser (cdr argv) :n t)
+        `('(,n) ,argv))))
+
 (defun read-argv-file (argv)
-  (recursive-read (cdr argv)))
+  (let ((files (option-parser (cdr argv))))
+    (recursive-read (cadr files))))
 
 ;; run cat
 (read-argv-file *posix-argv*)
