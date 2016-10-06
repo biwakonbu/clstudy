@@ -10,7 +10,8 @@
 (defun recursive-read (argv)
   (if (car argv)
       (progn
-        (read-file (car argv))
+        (handler-case (read-file (car argv))
+          (file-error (c) (format t "~a~%" c)))
         (recursive-read (cdr argv)))
       nil))
 
