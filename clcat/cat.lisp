@@ -7,11 +7,14 @@
             while line do (format t "~a~%" line))
       (close in))))
 
-(loop for x in (cdr *posix-argv*) do
-      (handler-case
-       (read-file x)
-       ;; file-error.
-       (file-error (c) (format t "~a~%" c))))
+(defun recursive-read (argv)
+  (if (car argv)
+      (progn
+        (read-file (car argv))
+        (recursive-read (cdr argv)))
+      nil))
 
-;; print argv 1.
-;; (format t "~%PATH: ~a~%" (car (cdr *posix-argv*)))
+(defun read-argv-file (argv)
+  (recursive-read (cdr argv)))
+
+(read-argv-file *posix-argv*)
