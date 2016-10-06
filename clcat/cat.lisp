@@ -7,11 +7,11 @@
             while line do (format t "~a~%" line))
       (close in))))
 
-(handler-case
- (loop for x in (cdr *posix-argv*) do
-       (read-file x))
+(loop for x in (cdr *posix-argv*) do
+      (handler-case
+       (read-file x)
        ;; file-error.
- (file-error (c) (format t "~a~%" c)))
+       (file-error (c) (format t "~a~%" c))))
 
 ;; print argv 1.
 ;; (format t "~%PATH: ~a~%" (car (cdr *posix-argv*)))
