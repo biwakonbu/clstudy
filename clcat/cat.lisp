@@ -22,13 +22,11 @@
 
 (defun option-parser (argv &key n)
   (let ((s (car argv)))
-    (if (or
-         (equal "-n" s)
-         (equal "-number" s))
+    (if (or (equal "-n" s) (equal "-number" s))
         (progn
           (setf (gethash "-n" *option-hash*) t)
           (option-parser (cdr argv) :n t))
-          argv)))
+        argv)))
 
 (defun read-argv-file (argv)
   (let ((files (option-parser (cdr argv))))
