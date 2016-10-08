@@ -8,18 +8,15 @@
       ""))
 
 (defun read-file (x)
-  (let ((in (open x :if-does-not-exist :error)) (count 1))
-    (when in
-      (loop for line = (read-line in nil)
-         while line do
-           (format t "~a~a~%" (set-line-number count) line)
-           (incf count))
-      (close in))))
+  (with-open-file (in x :if-does-not-exist :error)
+    (let ((count 1))
+      (when in
+        (loop for line = (read-line in nil)
+           while line do
+             (format t "~a~a~%" (set-line-number count) line)
+             (incf count))))))
 
 (defun recursive-read (files)
-  (maphash #'(lambda (key value)
-               (format t "~A => ~A~%" key value))
-           *option-hash*)
   (if (car files)
       (progn
         (handler-case (read-file (car files))
