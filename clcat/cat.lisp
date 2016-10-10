@@ -30,12 +30,14 @@
       nil))
 
 (defun option-parser (argv)
-  (let ((s (car argv)))
-    (if (or (equal "-n" s) (equal "-number" s))
-        (progn
-          (setf (gethash '-n *option-hash*) t)
-          (option-parser (cdr argv))))
-    (cdr argv)))
+  (if (option-check (car argv))
+      (option-parser (cdr argv))
+      argv))
+
+(defun option-check (s)
+  (cond
+    ((or (equal "-n" s) (equal "-number" s))
+     (setf (gethash '-n *option-hash*) t))))
 
 (defun read-argv-file (argv)
   (let ((files (option-parser (cdr argv))))
