@@ -36,8 +36,10 @@
 
 (defun option-check (s)
   (cond
-    ((or (equal "-n" s) (equal "-number" s))
-     (setf (gethash '-n *option-hash*) t))))
+    ((or (equal "-n" s) (equal "--number" s))
+     (setf (gethash '-n *option-hash*) t))
+    ((or (equal "-s" s) (equal "--squeeze-blank" s))
+     (setf (gethash '-s *option-hash*) t))))
 
 (defun read-argv-file (argv)
   (let ((files (option-parser (cdr argv))))
