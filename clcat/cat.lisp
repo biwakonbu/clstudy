@@ -29,13 +29,13 @@
         (recursive-read (cdr files)))
       nil))
 
-(defun option-parser (argv &key n)
+(defun option-parser (argv)
   (let ((s (car argv)))
     (if (or (equal "-n" s) (equal "-number" s))
         (progn
           (setf (gethash '-n *option-hash*) t)
-          (option-parser (cdr argv) :n t))
-        argv)))
+          (option-parser (cdr argv))))
+    (cdr argv)))
 
 (defun read-argv-file (argv)
   (let ((files (option-parser (cdr argv))))
