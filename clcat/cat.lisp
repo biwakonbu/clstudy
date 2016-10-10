@@ -24,18 +24,23 @@
 (defun number-option-p ()
   (gethash '-n *option-hash*))
 
+(defun show-ends-option-p ()
+  (gethash '-large-e *option-hash*))
+
 (defun squeeze-blank-line-p (line pre-line-blank-p)
   (and (not pre-line-blank-p)
        (blank-line-p line)))
 
 (defun output-lines (in)
-  (let ((count 1) (pre-line-blank-p nil))
+  (let ((count 1)
+        (pre-line-blank-p nil)
+        (ends (if (show-ends-option-p) "$" "")))
     (loop for line = (read-line in nil)
        while line do
          (when (or (not (squeeze-blank-option-p))
                    (not-blank-line-p line)
                    (squeeze-blank-line-p line pre-line-blank-p))
-           (format t "~a~a~%" (set-line-number count) line)
+           (format t "~a~a~a~%" (set-line-number count) line ends)
            (setf pre-line-blank-p nil)
            (incf count))
          (when (and (blank-line-p line) (not pre-line-blank-p))
@@ -64,7 +69,9 @@
     ((or (equal "-n" s) (equal "--number" s))
      (setf (gethash '-n *option-hash*) t))
     ((or (equal "-s" s) (equal "--squeeze-blank" s))
-     (setf (gethash '-s *option-hash*) t))))
+     (setf (gethash '-s *option-hash*) t))
+    ((or (equal "-E" s) (equal "--show-ends" s))
+     (setf (gethash '-large-e *option-hash*) t))))
 
 (defun read-argv-file (argv)
   (let ((files (option-parser (cdr argv))))
