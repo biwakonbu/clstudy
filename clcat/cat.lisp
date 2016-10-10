@@ -8,7 +8,7 @@
      (truncate (log n 10))))
 
 (defun set-line-number (n)
-  (if (gethash '-n *option-hash*)
+  (if (number-option-p)
       (format nil "~vT~a~a" (number-of-digits n) n #\TAB)
       ""))
 
@@ -19,7 +19,10 @@
   (not (blank-line-p line)))
 
 (defun squeeze-blank-option-p ()
-    (gethash '-s *option-hash*))
+  (gethash '-s *option-hash*))
+
+(defun number-option-p ()
+  (gethash '-n *option-hash*))
 
 (defun read-file (x)
   (with-open-file (in x :if-does-not-exist :error)
