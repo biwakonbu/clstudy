@@ -7,8 +7,10 @@
   (- *default-space-number*
      (truncate (log n 10))))
 
-(defun set-line-number (n)
-  (if (number-option-p)
+(defun set-line-number (n line)
+  (if (or (and (number-option-p)
+               (not (number-nonblank-option-p)))
+          (number-nonblank-line-p line))
       (format nil "~vT~a~a" (number-of-digits n) n #\TAB)
       ""))
 
@@ -21,6 +23,9 @@
 (defun squeeze-blank-option-p ()
   (gethash '-s *option-hash*))
 
+(defun number-nonblank-option-p ()
+  (gethash '-b *option-hash*))
+
 (defun number-option-p ()
   (gethash '-n *option-hash*))
 
@@ -31,6 +36,10 @@
   (and (not pre-line-blank-p)
        (blank-line-p line)))
 
+(defun number-nonblank-line-p (line)
+  (and (number-nonblank-option-p)
+       (not-blank-line-p line)))
+
 (defun output-lines (in)
   (let ((count 1)
         (pre-line-blank-p nil)
@@ -39,10 +48,13 @@
        while line do
          (when (or (not (squeeze-blank-option-p))
                    (not-blank-line-p line)
+                   (number-nonblank-line-p line)
                    (squeeze-blank-line-p line pre-line-blank-p))
-           (format t "~a~a~a~%" (set-line-number count) line ends)
            (setf pre-line-blank-p nil)
-           (incf count))
+           (format t "~a~a~a~%" (set-line-number count line) line ends)
+           (when (or (not (number-nonblank-option-p))
+                     (number-nonblank-line-p line))
+             (incf count)))
          (when (and (blank-line-p line) (not pre-line-blank-p))
            (setf pre-line-blank-p t)))))
 
@@ -66,6 +78,8 @@
 
 (defun option-check (s)
   (cond
+    ((or (equal "-b" s) (equal "--number-nonblank" s))
+     (setf (gethash '-b *option-hash*) t))
     ((or (equal "-n" s) (equal "--number" s))
      (setf (gethash '-n *option-hash*) t))
     ((or (equal "-s" s) (equal "--squeeze-blank" s))
