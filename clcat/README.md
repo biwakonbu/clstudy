@@ -4,6 +4,7 @@ this is practice implementation command in lisp.
 
 ## implemented options
 
-- -n --number
+- -b --number-nonblock
 - -E --show-ends
+- -n --number
 - -s --squeeze-blank
