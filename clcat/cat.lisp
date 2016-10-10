@@ -24,6 +24,10 @@
 (defun number-option-p ()
   (gethash '-n *option-hash*))
 
+(defun squeeze-blank-line-p (line pre-line-blank-p)
+  (and (not pre-line-blank-p)
+       (blank-line-p line)))
+
 (defun read-file (x)
   (with-open-file (in x :if-does-not-exist :error)
     (let ((count 1) (pre-line-blank-p nil))
@@ -32,7 +36,7 @@
            while line do
              (when (or (not (squeeze-blank-option-p))
                        (not-blank-line-p line)
-                       (and (not pre-line-blank-p) (blank-line-p line)))
+                       (squeeze-blank-line-p line pre-line-blank-p))
                (format t "~a~a~%" (set-line-number count) line)
                (setf pre-line-blank-p nil)
                (incf count))
