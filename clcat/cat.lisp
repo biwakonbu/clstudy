@@ -4,17 +4,12 @@
 (defparameter *default-space-number* 5)
 
 (defun number-of-digits (n)
-  (truncate (log n 10)))
-
-(defun number-of-spaces (n)
-  (- *default-space-number* (number-of-digits n)))
-
-(defun control-char-for-indentation (n)
-  (format nil "~~~dT" (number-of-spaces n)))
+  (- *default-space-number*
+     (truncate (log n 10))))
 
 (defun set-line-number (n)
   (if (gethash '-n *option-hash*)
-      (format nil "~@?~a~a" (control-char-for-indentation n) n #\TAB)
+      (format nil "~vT~a~a" (number-of-digits n) n #\TAB)
       ""))
 
 (defun read-file (x)
