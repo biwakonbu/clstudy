@@ -28,20 +28,23 @@
   (and (not pre-line-blank-p)
        (blank-line-p line)))
 
+(defun output-lines (in)
+  (let ((count 1) (pre-line-blank-p nil))
+    (loop for line = (read-line in nil)
+       while line do
+         (when (or (not (squeeze-blank-option-p))
+                   (not-blank-line-p line)
+                   (squeeze-blank-line-p line pre-line-blank-p))
+           (format t "~a~a~%" (set-line-number count) line)
+           (setf pre-line-blank-p nil)
+           (incf count))
+         (when (and (blank-line-p line) (not pre-line-blank-p))
+           (setf pre-line-blank-p t)))))
+
 (defun read-file (x)
   (with-open-file (in x :if-does-not-exist :error)
-    (let ((count 1) (pre-line-blank-p nil))
-      (when in
-        (loop for line = (read-line in nil)
-           while line do
-             (when (or (not (squeeze-blank-option-p))
-                       (not-blank-line-p line)
-                       (squeeze-blank-line-p line pre-line-blank-p))
-               (format t "~a~a~%" (set-line-number count) line)
-               (setf pre-line-blank-p nil)
-               (incf count))
-             (when (and (blank-line-p line) (not pre-line-blank-p))
-               (setf pre-line-blank-p t)))))))
+    (when in
+      (output-lines in))))
 
 (defun recursive-read (files)
   (if (car files)
