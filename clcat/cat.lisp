@@ -98,7 +98,9 @@
     ((or (equal "-E" s) (equal "--show-ends" s))
      (setf (gethash '-large-e *option-hash*) t))
     ((or (equal "-T" s) (equal "--show-tabs" s))
-     (setf (gethash '-t *option-hash*) t))))
+     (setf (gethash '-t *option-hash*) t))
+    ((equal "-u" s)
+     (setf (gethash '-u *option-hash*) t))))
 
 (defun read-argv-file (argv)
   (let ((files (option-parser (cdr argv))))
