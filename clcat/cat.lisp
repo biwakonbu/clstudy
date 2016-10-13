@@ -45,6 +45,9 @@
   (and (number-nonblank-option-p)
        (not-blank-line-p line)))
 
+(defun show-tabs (line)
+  (cl-ppcre:regex-replace-all #\TAB line "^I" :preserve-case t))
+
 (defun output-lines (in)
   (let ((count 1)
         (pre-line-blank-p nil)
@@ -56,7 +59,10 @@
                    (number-nonblank-line-p line)
                    (squeeze-blank-line-p line pre-line-blank-p))
            (setf pre-line-blank-p nil)
-           (format t "~a~a~a~%" (set-line-number count line) line ends)
+           (format t "~a~a~a~%" (set-line-number count line)
+                   (if (gethash '-t *option-hash*)
+                       (show-tabs line) line)
+                   ends)
            (when (or (not (number-nonblank-option-p))
                      (number-nonblank-line-p line))
              (incf count)))
