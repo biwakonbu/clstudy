@@ -1,5 +1,8 @@
 #! /usr/bin/sbcl --script
 
+(load "~/quicklisp/setup.lisp")
+(ql:quickload "cl-ppcre")
+
 (defparameter *option-hash* (make-hash-table))
 (defparameter *default-space-number* 5)
 
