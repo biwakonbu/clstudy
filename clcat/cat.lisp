@@ -5,6 +5,7 @@
 (require :asdf)
 (require :cl-ppcre)
 
+(defparameter *version* 0.1)
 (defparameter *option-hash* (make-hash-table))
 (defparameter *default-space-number* 5)
 
@@ -100,11 +101,15 @@
     ((or (equal "-T" s) (equal "--show-tabs" s))
      (setf (gethash '-t *option-hash*) t))
     ((equal "-u" s)
-     (setf (gethash '-u *option-hash*) t))))
+     (setf (gethash '-u *option-hash*) t))
+    ((equal "--version" s)
+     (setf (gethash '--version *option-hash*) t))))
 
 (defun read-argv-file (argv)
   (let ((files (option-parser (cdr argv))))
-    (recursive-read files)))
+    (if (gethash '--version *option-hash*)
+        (format t "cat.lisp version: ~a~%" *version*)
+        (recursive-read files))))
 
 ;; run cat
 (read-argv-file *posix-argv*)
