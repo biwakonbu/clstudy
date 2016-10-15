@@ -9,3 +9,5 @@ this is practice implementation command in lisp.
 - -n --number
 - -s --squeeze-blank
 - -T --show-tabs
+- -u
+- --version
