@@ -102,6 +102,8 @@
      (setf (gethash '-t *option-hash*) t))
     ((equal "-u" s)
      (setf (gethash '-u *option-hash*) t))
+    ((or (equal "-v" s) (equal "--show-nonprinting" s))
+     (setf (gethash '-v *option-hash*) t))
     ((equal "--version" s)
      (setf (gethash '--version *option-hash*) t))))
 
